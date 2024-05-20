@@ -1,0 +1,10 @@
+D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\deps\libembedded_hal_async-4ec8a6257b8b5535.rmeta: C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\lib.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\delay.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\digital.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\i2c.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\spi.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\../README.md
+
+D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\deps\embedded_hal_async-4ec8a6257b8b5535.d: C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\lib.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\delay.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\digital.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\i2c.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\spi.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\../README.md
+
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\lib.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\delay.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\digital.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\i2c.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\spi.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-hal-async-1.0.0\src\../README.md:

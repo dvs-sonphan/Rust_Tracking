@@ -1,0 +1,6 @@
+[default.general]
+chip = "STM32F303RDTx"
+# chip = "stm32f303rd"
+
+[default.rtt]
+enabled = true

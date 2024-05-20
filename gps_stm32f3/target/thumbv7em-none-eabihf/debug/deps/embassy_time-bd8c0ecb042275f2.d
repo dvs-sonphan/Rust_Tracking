@@ -1,0 +1,11 @@
+D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\deps\libembassy_time-bd8c0ecb042275f2.rmeta: C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\lib.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\fmt.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\delay.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\duration.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\instant.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\timer.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\../README.md
+
+D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\deps\embassy_time-bd8c0ecb042275f2.d: C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\lib.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\fmt.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\delay.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\duration.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\instant.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\timer.rs C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\../README.md
+
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\lib.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\fmt.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\delay.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\duration.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\instant.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\timer.rs:
+C:\Users\NITRO\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embassy-time-0.3.0\src\../README.md:
