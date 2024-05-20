@@ -4,7 +4,7 @@ Branch	|	Mô tả			|
 --------|-------------------------------|
 main	| Source code chính - release	|
 develop	| Branch từ **main** để phát triển các tính năng |
-feature	| Branch từ **develop** để code một tính năng cụ thể	|
+feature-read_gps | Branch từ **develop** - tính năng cụ thể đọc data gps |
 
 ----------------------------------------------------------------------------------
 ### Kết nối phần cứng:
@@ -36,6 +36,12 @@ cd gps_stm32f3
 code .
 ```
 
+### Build and Run:
+```
+cargo run --bin gps_stm32f3
+cargo-objcopy --bin gps_stm32f3 -- -O binary gps_stm32f3.bin
+cargo-objcopy --bin gps_stm32f3 -- -O binary gps_stm32f3.hex
+```
 
 
 
