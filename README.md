@@ -36,9 +36,19 @@ cd gps_stm32f3
 code .
 ```
 
+### Kiểm tra dòng chip
+```
+probe-rs chip list | Select-String "STM32F303RDT"
+```
+
 ### Build and Run:
 ```
+cargo clean
 cargo run --bin gps_stm32f3
+```
+
+### Convert file ELF sang loại file khác
+```
 cargo-objcopy --bin gps_stm32f3 -- -O binary gps_stm32f3.bin
 cargo-objcopy --bin gps_stm32f3 -- -O binary gps_stm32f3.hex
 ```
