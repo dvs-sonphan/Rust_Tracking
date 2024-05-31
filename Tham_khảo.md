@@ -11,3 +11,28 @@ https://www.linkedin.com/pulse/tokio-runtime-writing-reliable-asynchronous-withr
 
 ### [embassy_executor](https://docs.embassy.dev/embassy-executor/git/cortex-m/index.html)
 > An async/await executor designed for embedded usage.
+
+----------------------------------------------------------------------------------
+## Tham khảo một số code dùng thư viện Embassy
+
+### https://github.com/titanclass/embassy-start/blob/master/server/embedded-app/src/network.rs
+- Đây là đoạn code mình thấy có **đọc và viết** qua **uart**.
+- Sử dụng thêm các thư viện:
+```
+postcard = "1.0"
+heapless = { version = "0.7.7", features = ["defmt-impl", "serde"] }
+serde = { version = "1.0.126", default-features = false, features = ["derive"] }
+```
+
+### https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/uart_r503.rs
+
+
+
+
+
+
+
+
+
+
+

@@ -1,12 +1,14 @@
+# [target.'cfg(all(target_arch = "arm", target_os = "none"))']
+# # replace STM32F429ZITx with your chip as listed in `probe-rs chip list`
+# # check PID and VID: probe-rs list
+# runner = "probe-rs run --chip STM32F303RDTx"
+# # runner = "probe-rs run --probe 0483:3748 --chip STM32F303RDTx"
+
+[target.thumbv7em-none-eabihf]
+runner = "probe-rs run --chip STM32F303RDTx"
+rustflags = [
+  "-C", "link-arg=-Tlink.x",
+]
+
 [build]
 target = "thumbv7em-none-eabihf"
-
-[target.'cfg(all(target_arch = "arm", target_os = "none"))']
-# replace STM32F429ZITx with your chip as listed in `probe-rs chip list`
-# runner = "probe-run --chip STM32F303RDTx"
-runner = "probe-rs run --chip STM32F303RDTx --probe 0483:3748"
-# runner = "probe-rs run --chip STM32F303RDTx --protocol jtag --probe 0483:3748"
-# runner = "probe-rs run --chip STM32F303RDTx"
-
-[env]
-DEFMT_LOG = "trace"

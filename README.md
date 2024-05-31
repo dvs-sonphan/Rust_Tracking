@@ -14,7 +14,7 @@ feature-read_gps | Branch từ **develop** - tính năng cụ thể đọc data 
 Kết nối:
 STT	|	GPS SIM68ML	|	STM32F303RDT6	|
 --------|-----------------------|-----------------------|
-1	|	VCC		|	VCC		|
+1	|	V_GPS		| GPS_PWR (PIN PA4)	|
 2	|	GND		|	GND		|
 3	|	TXD0 (GPIO 2)	| USART2_RX (PIN PA3)	|
 4	|	RXD0 (GPIO 3)	| USART2_TX (PIN PA2)	|
@@ -39,6 +39,7 @@ code .
 ### Kiểm tra dòng chip
 ```
 probe-rs chip list | Select-String "STM32F303RDT"
+probe-rs run --chip STM32F303RDTx --probe 0483:3748 target\thumbv7em-none-eabihf\debug\gps_stm32f3
 ```
 
 ### Build and Run:

@@ -1,1 +1,0 @@
-D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\gps_stm32f3: D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\build.rs D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\src\debug_uart.rs D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\src\main.rs

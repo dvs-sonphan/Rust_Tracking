@@ -1,6 +1,0 @@
-cargo:rustc-link-lib=static=cortex-m
-cargo:rustc-link-search=D:\8_Github_Folder\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\build\cortex-m-615b25ea44398379\out
-cargo:rustc-cfg=cortex_m
-cargo:rustc-cfg=armv7m
-cargo:rustc-cfg=armv7em
-cargo:rustc-cfg=has_fpu
