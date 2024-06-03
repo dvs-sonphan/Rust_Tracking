@@ -9,3 +9,4 @@ targets = [
     "thumbv8m.main-none-eabihf",
     "wasm32-unknown-unknown",
 ]
+# features = ["async_fn_in_trait", "const_fn_trait_bound", "const_trait_impl", "custom_test_frameworks", "default_alloc_error_handler", "dispatch_from_dyn", "doc_cfg", "doc_spotlight", "doc_spotlight"]
