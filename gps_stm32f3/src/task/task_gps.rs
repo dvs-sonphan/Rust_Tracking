@@ -12,7 +12,7 @@ use defmt_rtt as _;
 use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_stm32::usart::{Config, Uart};
-use embassy_stm32::{bind_interrupts, peripherals, usart};
+use embassy_stm32::{bind_interrupts, peripherals, usart, Peripherals};
 
 use super::debug_uart;
 
@@ -24,8 +24,9 @@ bind_interrupts!(struct Irqs {
 });
 
 #[embassy_executor::task]
-pub async fn read_data_gps() {
-    let p = embassy_stm32::init(Default::default());
+pub async fn read_data_gps(p: Peripherals) {
+    // pub async fn read_data_gps() {
+    // let p = embassy_stm32::init(Default::default());
     info!("Task GPS");
 
     //Turn on power for module GPS

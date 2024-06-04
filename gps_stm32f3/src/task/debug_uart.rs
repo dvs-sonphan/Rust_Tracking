@@ -1,32 +1,61 @@
 // #[warn(unused_imports)]
 use core::fmt::Write;
-
 use defmt::*;
 use defmt_rtt as _;
+// use embassy_executor::task;
 
+use embassy_stm32::peripherals::USART1;
 use embassy_stm32::usart::{Config, Uart, UartTx};
-use embassy_stm32::{bind_interrupts, peripherals, usart};
+use embassy_stm32::{bind_interrupts, peripherals, usart, Peripherals, interrupt};
 use heapless::String;
 // use {defmt_rtt as _, panic_probe as _};
 // use panic_halt as _;
 // use embassy_executor::task;
 // use embassy_stm32::dma::NoDma;
+// use embassy_stm32::usart::{self, Uart};
+// use embassy_stm32::{interrupt, Peripherals};
+// use embassy_stm32::usart::{Config, Uart, BasicInstance};
+use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5};
+// use embassy_stm32::interrupt::Irqs;
+
+// pub type NetworkUart = embassy_stm32::peripherals::USART1;
+// pub type NetworkUartInterrupt = USART1;
+// pub type NetworkUartRxPin = embassy_stm32::peripherals::PA10;
+// pub type NetworkUartTxPin = embassy_stm32::peripherals::PA9;
+// pub type NetworkUartRxDma = embassy_stm32::peripherals::DMA1_CH5;
+// pub type NetworkUartTxDma = embassy_stm32::peripherals::DMA1_CH4;
+
 
 bind_interrupts!(struct Irqs {
     USART1 => usart::InterruptHandler<peripherals::USART1>;
 });
 
-// #[embassy_executor::task]
-pub async fn show_data_debug(message: &str) {
-    let p = embassy_stm32::init(Default::default());
-    info!("Write Command");
+// pub struct NetworkPeripherals {
+//     pub uart: NetworkUart,
+//     pub uart_interrupt: NetworkUartInterrupt,
+//     pub uart_rx_pin: NetworkUartRxPin,
+//     pub uart_tx_pin: NetworkUartTxPin,
+//     pub uart_rx_dma: NetworkUartRxDma,
+//     pub uart_tx_dma: NetworkUartTxDma,
+//     // uart_interrupt: Irqs,
+// }
 
+// pub fn init(p: Peripherals) -> NetworkPeripherals {
+//     NetworkPeripherals {
+//         uart: p.USART2,
+//         uart_interrupt: interrupt::take!(USART2),
+//         uart_rx_pin: p.PD6,
+//         uart_tx_pin: p.PD5,
+//         uart_rx_dma: p.DMA1_CH5,
+//         uart_tx_dma: p.DMA1_CH6,
+//     }
+// }
+
+pub fn init_peripheral(p: Peripherals) -> Uart<'static, USART1, DMA1_CH4, DMA1_CH5> {
     let mut config_debug = Config::default();
     config_debug.baudrate = 115200;
 
-    // let mut usart_debug_tx = UartTx::new(p.USART1, p.PA9, NoDma, config_debug).unwrap();
-
-    let mut usart_debug_tx = Uart::new(
+    let uart = Uart::new(
         p.USART1,
         p.PA10,
         p.PA9,
@@ -37,14 +66,39 @@ pub async fn show_data_debug(message: &str) {
     )
     .unwrap();
 
+    uart
+}
+
+
+// #[embassy_executor::task]
+pub async fn show_data_debug(mut uart: Uart<'static, USART1, DMA1_CH4, DMA1_CH5>, message: &str) {
+    // let p = embassy_stm32::init(Default::default());
+    info!("Write Command");
+
+    // let mut config_debug = Config::default();
+    // config_debug.baudrate = 115200;
+
+    // let mut usart_debug_tx = UartTx::new(p.USART1, p.PA9, NoDma, config_debug).unwrap();
+
+    // let mut usart_debug_tx = Uart::new(
+    //     p.USART1,
+    //     p.PA10,
+    //     p.PA9,
+    //     Irqs,
+    //     p.DMA1_CH4,
+    //     p.DMA1_CH5,
+    //     config_debug,
+    // )
+    // .unwrap();
+
     // let mut s: String<128> = String::new();
     // core::write!(&mut s, "{}\r\n", message).unwrap();
 
     // let _ = usart_debug_tx.write(s.as_bytes()).await;
     // usart_debug_tx.write(s.as_bytes()).await.unwrap();
 
-    // usart_debug_tx.write(message.as_bytes()).await.unwrap();
-    usart_debug_tx.blocking_write(message.as_bytes()).unwrap();
+    uart.write(message.as_bytes()).await.unwrap();
+    // uart.blocking_write(message.as_bytes()).unwrap();
 }
 
 // #[embassy_executor::task]
@@ -99,4 +153,12 @@ pub async fn read_command() {
         usart.read(&mut msg).await.unwrap();
         usart.write(&msg).await.unwrap();
     }
+}
+
+#[embassy_executor::task]
+pub async fn show_data_hello() {
+    // loop {
+    //     info!("Hello");
+    // }
+    info!("Hello");
 }

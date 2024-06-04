@@ -20,7 +20,7 @@ use embassy_executor::Spawner;
 use heapless::String;
 // use embassy_stm32::gpio::{Level, Output, Speed};
 use panic_probe as _;
-// use embassy_stm32::Peripherals;
+// use embassy_stm32::{interrupt, Peripherals};
 use embassy_time::{Duration, Timer};
 
 // use embassy_stm32::usart::{Config, Uart};
@@ -179,9 +179,14 @@ use embassy_time::{Duration, Timer};
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     info!("Hello");
+    let p = embassy_stm32::init(Default::default());
 
-    // rtt_init_print!();
-    // rprint!("Helo");
+    //Task GPS
+    // spawner.spawn(task::task_gps::read_data_gps(p)).unwrap();
+
+    // STM32
+    let mut debug_peripherals = task::debug_uart::init_peripheral(p);
+    // let _ = debug_peripherals.write(b"Test UART\r\n").await;
 
     // let mut s: String<128> = String::new();
     // core::write!(&mut s, "{}\r\n", "GPS Task.....................................................................................").unwrap();
@@ -203,14 +208,33 @@ async fn main(spawner: Spawner) {
 
     //Test debug UART
     // task::debug_uart::show_data_debug("UART Debug").await;
-    let _ = spawner.spawn(task::task_gps::read_data_gps());
+    // spawner.spawn(task::debug_uart::show_data_hello()).unwrap();
+    // task::debug_uart::show_data_debug("123").await;
+    // let s: String<128> = String::new();
+    // let _value = task::debug_uart::show_data_debug(debug_peripherals, &s);
 
-    // for n in 0u32.. {
+    
+
+    for n in 0u32.. {
+        let mut s: String<128> = String::new();
+        core::write!(&mut s, "Hello DMA World {}!\r\n", n).unwrap();
+
+        println!("{}", s.as_str());
+        let _ = debug_peripherals.write(s.as_bytes()).await;
+
+        Timer::after(Duration::from_millis(1000)).await;
+    }
+
+    // spawner.spawn(task::debug_uart::show_data_hello()).unwrap();
+
+    // loop {
     //     let mut s: String<128> = String::new();
-    //     core::write!(&mut s, "Hello DMA World {}!\r\n", n).unwrap();
+    //     core::write!(&mut s, "Hello DMA World!\r\n").unwrap();
 
-    //     println!("{}", s.as_str());
-    //     task::debug_uart::show_data_debug(&s).await;
+    //     // println!("{}", s.as_str());
+    //     // task::debug_uart::show_data_debug(&s).await;
+    // task::debug_uart::show_data_hello();
+    // spawner.spawn(task::debug_uart::show_data_hello()).unwrap();
 
     //     Timer::after(Duration::from_millis(1000)).await;
     // }
