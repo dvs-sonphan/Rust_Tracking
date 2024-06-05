@@ -17,11 +17,27 @@ use defmt::*;
 use defmt_rtt as _;
 
 use embassy_executor::Spawner;
+// use embassy_stm32::peripherals::{DMA1_CH4, DMA1_CH5, USART1};
+
+use embassy_stm32::usart::{Config, Uart};
+use embassy_stm32::{bind_interrupts, peripherals, usart, Peripherals};
 use heapless::String;
 // use embassy_stm32::gpio::{Level, Output, Speed};
-use panic_probe as _;
-// use embassy_stm32::{interrupt, Peripherals};
 use embassy_time::{Duration, Timer};
+use panic_probe as _;
+
+use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
+use embassy_sync::mutex::Mutex;
+
+static SHARED: Mutex<ThreadModeRawMutex, u32> = Mutex::new(0);
+
+bind_interrupts!(struct IrqsUART1 {
+    USART1 => usart::InterruptHandler<peripherals::USART1>;
+});
+
+bind_interrupts!(struct IrqsUART2 {
+    USART2 => usart::InterruptHandler<peripherals::USART2>;
+});
 
 // use embassy_stm32::usart::{Config, Uart};
 // use embassy_stm32::{bind_interrupts, peripherals, usart};
@@ -175,17 +191,67 @@ use embassy_time::{Duration, Timer};
 //     }
 
 // }
+// pub fn init_peripheral(p: Peripherals) -> Uart<'static, USART1, DMA1_CH4, DMA1_CH5> {
+//     // let p = embassy_stm32::init(Default::default());
+
+//     let mut config_debug = Config::default();
+//     config_debug.baudrate = 115200;
+
+//     // let usart1 = &p.USART1;
+//     let uart = Uart::new(
+//         // *usart1,
+//         p.USART1,
+//         p.PA10,
+//         p.PA9,
+//         Irqs,
+//         p.DMA1_CH4,
+//         p.DMA1_CH5,
+//         config_debug,
+//     )
+//     .unwrap();
+
+//     uart
+// }
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     info!("Hello");
     let p = embassy_stm32::init(Default::default());
 
-    //Task GPS
-    // spawner.spawn(task::task_gps::read_data_gps(p)).unwrap();
+    //************ Debug UART config ************************
+    let mut config_debug = Config::default();
+    config_debug.baudrate = 115200;
+
+    let mut usart_debug = Uart::new(
+        p.USART1,
+        p.PA10,
+        p.PA9,
+        IrqsUART1,
+        p.DMA1_CH4,
+        p.DMA1_CH5,
+        config_debug,
+    )
+    .unwrap();
+
+    //***************** GPS config *************************
+    let mut config_gps = Config::default();
+    config_gps.baudrate = 9600;
+
+    let usart_gps = Uart::new(
+        p.USART2, p.PA3, p.PA2, IrqsUART2, p.DMA1_CH7, p.DMA1_CH6, config_gps,
+    )
+    .unwrap();
+
+    //******************* Task***************************
+    // let debug_uart = init_peripheral(p);
+    task::debug_uart::show_data_debug(&mut usart_debug, "Test GPS").await;
+    task::debug_uart::show_data_debug(&mut usart_debug, "GPS Data: ").await;
+
+    //GPS Task
+    spawner.spawn(task::task_gps::read_data_gps(p.PA4, usart_gps)).unwrap();
 
     // STM32
-    let mut debug_peripherals = task::debug_uart::init_peripheral(p);
+    // let mut debug_peripherals = task::debug_uart::init_peripheral(&p);
     // let _ = debug_peripherals.write(b"Test UART\r\n").await;
 
     // let mut s: String<128> = String::new();
@@ -213,32 +279,23 @@ async fn main(spawner: Spawner) {
     // let s: String<128> = String::new();
     // let _value = task::debug_uart::show_data_debug(debug_peripherals, &s);
 
-    
+    let mut msg: String<8> = String::new();
 
     for n in 0u32.. {
+        // Obtain updated value from global context
+        let shared = SHARED.lock().await;
+        core::writeln!(&mut msg, "{:02}\r\n", *shared).unwrap();
+        // // Transmit Message
+        println!("{}", msg.as_str());
+        msg.clear();
+
         let mut s: String<128> = String::new();
         core::write!(&mut s, "Hello DMA World {}!\r\n", n).unwrap();
 
         println!("{}", s.as_str());
-        let _ = debug_peripherals.write(s.as_bytes()).await;
+        task::debug_uart::show_data_debug(&mut usart_debug, &s).await;
+        // let _ = debug_peripherals.write(s.as_bytes()).await;
 
         Timer::after(Duration::from_millis(1000)).await;
     }
-
-    // spawner.spawn(task::debug_uart::show_data_hello()).unwrap();
-
-    // loop {
-    //     let mut s: String<128> = String::new();
-    //     core::write!(&mut s, "Hello DMA World!\r\n").unwrap();
-
-    //     // println!("{}", s.as_str());
-    //     // task::debug_uart::show_data_debug(&s).await;
-    // task::debug_uart::show_data_hello();
-    // spawner.spawn(task::debug_uart::show_data_hello()).unwrap();
-
-    //     Timer::after(Duration::from_millis(1000)).await;
-    // }
-
-    // spawner.spawn(task::task_gps::read_data_gps()).unwrap();
-    // spawner.spawn(task::task_gps::gps_main_task()).unwrap();
 }

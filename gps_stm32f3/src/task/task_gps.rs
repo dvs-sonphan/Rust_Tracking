@@ -2,7 +2,7 @@
 
 // use core::fmt::Write;
 
-// use crate::task::debug_uart;
+use crate::task::debug_uart;
 // mod task::debug_uart;
 
 use defmt::*;
@@ -14,32 +14,39 @@ use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_stm32::usart::{Config, Uart};
 use embassy_stm32::{bind_interrupts, peripherals, usart, Peripherals};
 
-use super::debug_uart;
+// use super::debug_uart;
+
+use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
+use embassy_sync::mutex::Mutex;
+
+static SHARED: Mutex<ThreadModeRawMutex, u32> = Mutex::new(0);
 
 // use heapless::{String,Vec};
 // use {defmt_rtt as _, panic_probe as _};
 
-bind_interrupts!(struct Irqs {
-    USART2 => usart::InterruptHandler<peripherals::USART2>;
-});
+// bind_interrupts!(struct Irqs {
+//     USART2 => usart::InterruptHandler<peripherals::USART2>;
+// });
 
 #[embassy_executor::task]
-pub async fn read_data_gps(p: Peripherals) {
+pub async fn read_data_gps(power_pin: peripherals::PA4, mut gps_uart: Uart<'static, peripherals::USART2, peripherals::DMA1_CH7, peripherals::DMA1_CH6>) {
+// pub async fn read_data_gps(power: peripherals::PA4, gps_uart: Uart<'static, USART2, DMA1_CH7, DMA1_CH6>) {
     // pub async fn read_data_gps() {
     // let p = embassy_stm32::init(Default::default());
     info!("Task GPS");
 
     //Turn on power for module GPS
-    let _gps_pwr = Output::new(p.PA4, Level::High, Speed::VeryHigh);
+    // let _gps_pwr = Output::new(p.PA4, Level::High, Speed::VeryHigh);
+    let _gps_pwr = Output::new(power_pin, Level::High, Speed::VeryHigh);
 
-    let mut config = Config::default();
-    config.baudrate = 9600;
+    // let mut config = Config::default();
+    // config.baudrate = 9600;
 
-    let mut usart = Uart::new(
-        // p.USART2, p.PA3, p.PA2, Irqs
-        p.USART2, p.PA3, p.PA2, Irqs, p.DMA1_CH7, p.DMA1_CH6, config,
-    )
-    .unwrap();
+    // let mut usart = Uart::new(
+    //     // p.USART2, p.PA3, p.PA2, Irqs
+    //     p.USART2, p.PA3, p.PA2, Irqs, p.DMA1_CH7, p.DMA1_CH6, config,
+    // )
+    // .unwrap();
 
     //Test debug UART
     // debug_uart::show_data_debug("UART Debug").await;
@@ -47,8 +54,13 @@ pub async fn read_data_gps(p: Peripherals) {
 
     let mut msg: [u8; 128] = [0; 128];
 
+    // let value = debug_uart::init_peripheral(p);
     loop {
-        usart.read(&mut msg).await.unwrap();
+        let mut shared = SHARED.lock().await;
+        *shared = shared.wrapping_add(1);
+
+        // usart.read(&mut msg).await.unwrap();
+        gps_uart.read(&mut msg).await.unwrap();
         // usart.write(&msg).await.unwrap();
 
         // let _ = debug_uart::write_command("UART GPS");
@@ -56,6 +68,9 @@ pub async fn read_data_gps(p: Peripherals) {
         if let Ok(message) = core::str::from_utf8(&msg) {
             println!("result: {}", message);
             // self::debug_uart::show_data_debug(message).await;
+
+            // let mut debug_peripherals = value;
+            // let _ = debug_peripherals.write(b"Test UART\r\n").await;
         }
 
         // let _ = debug_uart::read_command();
