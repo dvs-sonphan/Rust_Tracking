@@ -26,6 +26,34 @@ serde = { version = "1.0.126", default-features = false, features = ["derive"] }
 
 ### https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/uart_r503.rs
 
+----------------------------------------------------------------------------------
+### [nmea_parser](https://docs.rs/nmea-parser/latest/nmea_parser/)
+- https://crates.io/crates/nmea-parser
+- https://github.com/zaari/nmea-parser/tree/master
+
+## Một số project về GPS
+- https://github.com/tstellanova/ublox-core
+- https://github.com/BlackbirdHQ/ublox-cellular-rs
+- https://github.com/ublox-rs/ublox
+- https://github.com/MechanicalPython/adafruit_gps
+
+---------------------------------------------------------------------------------
+### macro
+- https://users.rust-lang.org/t/write-macro-doesnt-work-in-no-std/40343
+- https://os.phil-opp.com/heap-allocation/
+- https://blog.timhutt.co.uk/std-embedded-rust/index.html
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,7 +1,26 @@
 // main.rs
+#![feature(prelude_import)]
 #![no_std]
 #![no_main]
 #![feature(type_alias_impl_trait)]
+#![feature(alloc_error_handler)]
+
+// #[prelude_import]
+// use core::prelude::rust_2021::*;
+// #[macro_use]
+// extern crate core;
+// extern crate compiler_builtins as _;
+
+extern crate alloc;
+// use alloc::vec::Vec;
+
+use alloc_cortex_m::CortexMHeap;                        // 👈
+                                                        // 👈
+// this is the allocator the application will use       // 👈
+#[global_allocator]                                     // 👈
+static ALLOCATOR: CortexMHeap = CortexMHeap::empty();   // 👈
+                                                        // 👈
+const HEAP_SIZE: usize = 1024; // in bytes              // 👈
 
 mod task;
 use core::fmt::Write;
@@ -26,6 +45,9 @@ bind_interrupts!(struct IrqsUART2 {
 
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
+    // Initialize the allocator BEFORE you use it                             // 👈
+    unsafe { ALLOCATOR.init(cortex_m_rt::heap_start() as usize, HEAP_SIZE) }  // 👈
+
     info!("GPS Tracking");
     let p = embassy_stm32::init(Default::default());
 
@@ -60,15 +82,21 @@ async fn main(spawner: Spawner) {
     spawner.spawn(task::task_gps::read_data_gps(p.PA4, usart_gps)).unwrap();
 
     //************************************************* */
-    let mut msg: String<128> = String::new();
+    // let mut msg: String<128> = String::new();
 
-    for n in 0u32.. {
-        core::write!(&mut msg, "Hello DMA World {}!\r\n", n).unwrap();
+    // for n in 0u32.. {
+    //     core::write!(&mut msg, "Hello DMA World {}!\r\n", n).unwrap();
 
-        println!("{}", msg.as_str());
-        task::debug_uart::show_data_debug(&mut usart_debug, &msg).await;
-        msg.clear();
+    //     println!("{}", msg.as_str());
+    //     task::debug_uart::show_data_debug(&mut usart_debug, &msg).await;
+    //     msg.clear();
 
-        Timer::after(Duration::from_millis(1000)).await;
-    }
+    //     Timer::after(Duration::from_millis(1000)).await;
+    // }
+}
+
+// define what happens in an Out Of Memory (OOM) condition     // 👈
+#[alloc_error_handler]                                         // 👈
+fn alloc_error(_layout: core::alloc::Layout) -> ! {            // 👈
+    loop {}                                                    // 👈
 }
