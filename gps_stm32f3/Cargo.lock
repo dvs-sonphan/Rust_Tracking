@@ -617,6 +617,7 @@ name = "gps_stm32f3"
 version = "0.1.0"
 dependencies = [
  "alloc-cortex-m",
+ "chrono",
  "cortex-m",
  "cortex-m-rt",
  "defmt",
