@@ -2,18 +2,20 @@ use core::fmt::*;
 
 use defmt::*;
 use defmt_rtt as _;
+use alloc::vec::Vec;
+
+use nmea_parser::*;
 
 use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_stm32::peripherals;
 use embassy_stm32::usart::Uart;
-
-use alloc::vec::Vec;
 use embassy_time::{Duration, Timer};
-use nmea_parser::*;
+
+use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
+use embassy_sync::channel::Sender;
 
 // extern crate chrono;
 // use chrono::{DateTime, Utc};
-
 
 // #[derive(Debug)]
 // enum GPSUpdate {
@@ -25,7 +27,7 @@ use nmea_parser::*;
 // }
 
 #[derive(Clone, Copy, Debug, Format)]
-struct GPSData {
+pub struct GPSData {
     // date_time:DateTime<Utc>,
     lat: f64,
     long: f64,
@@ -34,6 +36,16 @@ struct GPSData {
 }
 
 impl GPSData {
+    pub fn new() -> Self {
+        GPSData {
+            lat: 0.0,
+            long: 0.0,
+            sat: 0,
+            speed: 0.0,
+        }
+    }
+
+    // Update GPS Data
     fn update_lat(&mut self, new_lat: f64) {
         self.lat = new_lat;
     }
@@ -49,23 +61,32 @@ impl GPSData {
     fn update_speed(&mut self, new_speed: f64) {
         self.speed = new_speed;
     }
-}
 
-// impl GPSData {
-//     fn apply_update(&mut self, update: GPSUpdate) {
-//         match update {
-//             GPSUpdate::Lat(new_lat) => self.lat = new_lat,
-//             GPSUpdate::Long(new_long) => self.long = new_long,
-//             GPSUpdate::Sat(new_sat) => self.sat = new_sat,
-//             GPSUpdate::Speed(new_speed) => self.speed = new_speed,
-//         }
-//     }
-// }
+    // Get GPS Data
+    pub fn get_lat(&self) -> f64 {
+        self.lat
+    }
+
+    pub fn get_long(&self) -> f64 {
+        self.long
+    }
+
+    pub fn get_sat(&self) -> u8 {
+        self.sat
+    }
+
+    pub fn get_speed(&self) -> f64 {
+        self.speed
+    }
+}
 
 // #[embassy_executor::task]
 pub async fn read_data_gps(
     mut gps_uart: Uart<'static, peripherals::USART2, peripherals::DMA1_CH7, peripherals::DMA1_CH6>,
+    gps_data: GPSData,
+    sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>
 ) {
+    info!("Read Data GPS");
     let mut msg: [u8; 256] = [0; 256];
     loop {
         gps_uart.read(&mut msg).await.unwrap();
@@ -79,7 +100,7 @@ pub async fn read_data_gps(
                 let _vec_message = vec.push(line);
             }
             // println!("vec at {:?}", vec.as_slice());
-            parse_data_gps(vec.clone()).await;
+            parse_data_gps(vec.clone(), gps_data, sender).await;
 
             //clean array
             for elem in msg.iter_mut() {
@@ -90,21 +111,14 @@ pub async fn read_data_gps(
     }
 }
 
-pub async fn parse_data_gps(buf: Vec<&str>) {
+pub async fn parse_data_gps(buf: Vec<&str>, mut gps_data: GPSData, sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>) {
     info!("Parse Data GPS");
-    let mut gps_data = GPSData {
-        lat: 0.0,
-        long: 0.0,
-        sat: 0,
-        speed: 0.0,
-    };
 
     // Create parser and define sample sentences
     let mut parser = NmeaParser::new();
 
     // Parse the sentences and print some fields of the messages
     for sentence in buf {
-        // println!("{}", sentence);
         match parser.parse_sentence(sentence) {
             core::prelude::v1::Ok(ParsedMessage::Gga(gga)) => {
                 // let gga_lat = GPSUpdate::Lat(gga.latitude.unwrap());
@@ -128,9 +142,6 @@ pub async fn parse_data_gps(buf: Vec<&str>) {
                 // println!("Speed:   {} kts", rmc.sog_knots.unwrap());
                 // println!("Bearing: {}°", rmc.bearing.unwrap()); //Góc
 
-                // let rmc_speed = GPSUpdate::Speed(rmc.sog_knots.unwrap());
-                // let rmc_long = GPSUpdate::Long(rmc.bearing.unwrap());
-
                 gps_data.update_speed(rmc.sog_knots.unwrap());
 
                 println!("");
@@ -140,6 +151,9 @@ pub async fn parse_data_gps(buf: Vec<&str>) {
 
         //show data gps
         println!("Updated GPS Data: {:?}", gps_data);
+
+        // Send updated data to the main thread
+        sender.send(gps_data).await;
     }
 }
 
@@ -147,17 +161,17 @@ pub async fn parse_data_gps(buf: Vec<&str>) {
 pub async fn main_task_gps(
     power_pin: peripherals::PA4,
     gps_uart: Uart<'static, peripherals::USART2, peripherals::DMA1_CH7, peripherals::DMA1_CH6>,
+    gps_data: GPSData,
+    sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>,
 ) {
     info!("Task GPS");
 
     //Turn on power for module GPS
-    // let _gps_pwr = Output::new(p.PA4, Level::High, Speed::VeryHigh);
     let _gps_pwr = Output::new(power_pin, Level::High, Speed::VeryHigh);
 
-    //Read data GPS
-    read_data_gps(gps_uart).await;
-
     //show data gps
-    // let mut gps_data = GPSData { lat: todo!(), long: todo!(), sat: todo!(), speed: todo!() };
-    // println!("Updated GPS Data: {:?}", gps_data);
+    println!("Updated GPS Data: {:?}", gps_data);
+
+    //Read data GPS
+    read_data_gps(gps_uart, gps_data, sender).await;
 }
