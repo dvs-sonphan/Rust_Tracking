@@ -1,19 +1,10 @@
-// main.rs
-// #![feature(prelude_import)]
 #![no_std]
 #![no_main]
 #![feature(type_alias_impl_trait)]
 #![feature(alloc_error_handler)]
 
-// #[prelude_import]
-// use core::prelude::rust_2021::*;
-// #[macro_use]
-// extern crate core;
-// extern crate compiler_builtins as _;
-
 extern crate alloc;
 // use alloc::vec::Vec;
-
 use alloc_cortex_m::CortexMHeap;                        
                                                         
 // this is the allocator the application will use       
@@ -34,6 +25,8 @@ use embassy_stm32::{bind_interrupts, peripherals, usart};
 use heapless::String;
 use embassy_time::{Duration, Timer};
 use panic_probe as _;
+
+use crate::task::task_gps;
 
 bind_interrupts!(struct IrqsUART1 {
     USART1 => usart::InterruptHandler<peripherals::USART1>;
@@ -79,9 +72,10 @@ async fn main(spawner: Spawner) {
     task::debug_uart::show_data_debug(&mut usart_debug, "GPS Task\r\n").await;
     task::debug_uart::show_data_debug(&mut usart_debug, "Test Multi-Task\r\n").await;
     //GPS Task
-    spawner.spawn(task::task_gps::read_data_gps(p.PA4, usart_gps)).unwrap();
+    spawner.spawn(task::task_gps::main_task_gps(p.PA4, usart_gps)).unwrap();
 
     //************************************************* */
+    // let mut gps_data = task_gps()
     // let mut msg: String<128> = String::new();
 
     // for n in 0u32.. {
