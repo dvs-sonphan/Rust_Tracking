@@ -40,8 +40,11 @@ serde = { version = "1.0.126", default-features = false, features = ["derive"] }
 - https://os.phil-opp.com/heap-allocation/
 - https://blog.timhutt.co.uk/std-embedded-rust/index.html
 
-
-
+--------------------------------------------------------------------------------
+### Channel Community
+- https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/blinky_two_tasks.rs
+- https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/blinky_two_channels.rs
+- https://rust-classes.com/chapter_embedded_stmf401_soil
 
 
 

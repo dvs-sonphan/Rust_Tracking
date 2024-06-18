@@ -1,10 +1,6 @@
-### Branch
-
-Branch	|	Mô tả			|
---------|-------------------------------|
-main	| Source code chính - release	|
-develop	| Branch từ **main** để phát triển các tính năng |
-feature-read_gps | Branch từ **develop** - tính năng cụ thể đọc data gps |
+## Rust_Tracking: 
+- Đây là project **GPS-Tracking** được viết bằng **Rust**.
+- Framwork được sử dụng là: [Embassy](https://embassy.dev/)
 
 ----------------------------------------------------------------------------------
 ### Kết nối phần cứng:
@@ -66,7 +62,17 @@ cargo-objcopy --bin gps_stm32f3 -- -O binary gps_stm32f3.bin
 cargo-objcopy --bin gps_stm32f3 -- -O binary gps_stm32f3.hex
 ```
 
+-------------------------------------------------------------------
+### TODO List
 
+Step	| Status	|	Detail		|
+--------|---------------|-----------------------|
+Step 1	| **DONE**	| Khởi tạo dự án và Test debug Serial UART_1 |
+Step 2	| **DONE**	| Đọc dữ liệu data GPS từ UART_2 |
+Step 3	| **DONE**	| Parse data GPS	|
+Step 4	| `Todo`	| Watchdog-Timer cho MCU |
+Step 5	| `Todo`	| Kết nối với module sim |
+Step 6	| `Todo`	| Gửi data GPS lên IoT Platform |
 
 
 
