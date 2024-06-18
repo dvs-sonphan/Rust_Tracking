@@ -27,6 +27,18 @@ PA9 - USART1_TX
 PA10 - USART1_RX
 ```
 
+---------------------------------------------------------------------------------
+## [GPS NMEA](https://aprs.gids.nl/nmea/)
+
+### [GGA](https://aprs.gids.nl/nmea/#gga) -  Các thông tin sẽ lấy bao gồm:
+- Latitude
+- Longitude
+- Number of Satellites
+
+### [RMC](https://aprs.gids.nl/nmea/#rmc) -  Các thông tin sẽ lấy bao gồm:
+- Speed
+- DateTime
+
 ----------------------------------------------------------------------------------
 ## gps_stm32f3
 - Tạo project:
