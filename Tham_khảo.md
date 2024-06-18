@@ -1,11 +1,8 @@
 ## Async Rust
 ```
 https://tweedegolf.nl/en/blog/65/async-rust-vs-rtos-showdown
-
 https://dev.to/theembeddedrustacean/sharing-data-among-tasks-in-rust-embassy-synchronization-primitives-59hk
-
 https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
-
 https://www.linkedin.com/pulse/tokio-runtime-writing-reliable-asynchronous-withrust-soares-m-sc-/
 ```
 
@@ -25,6 +22,37 @@ serde = { version = "1.0.126", default-features = false, features = ["derive"] }
 ```
 
 ### https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/uart_r503.rs
+
+----------------------------------------------------------------------------------
+### [nmea_parser](https://docs.rs/nmea-parser/latest/nmea_parser/)
+- https://crates.io/crates/nmea-parser
+- https://github.com/zaari/nmea-parser/tree/master
+
+## Một số project về GPS
+- https://github.com/tstellanova/ublox-core
+- https://github.com/BlackbirdHQ/ublox-cellular-rs
+- https://github.com/ublox-rs/ublox
+- https://github.com/MechanicalPython/adafruit_gps
+
+---------------------------------------------------------------------------------
+### macro
+- https://users.rust-lang.org/t/write-macro-doesnt-work-in-no-std/40343
+- https://os.phil-opp.com/heap-allocation/
+- https://blog.timhutt.co.uk/std-embedded-rust/index.html
+
+--------------------------------------------------------------------------------
+### Channel Community
+- https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/blinky_two_tasks.rs
+- https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/blinky_two_channels.rs
+- https://rust-classes.com/chapter_embedded_stmf401_soil
+
+
+
+
+
+
+
+
 
 
 

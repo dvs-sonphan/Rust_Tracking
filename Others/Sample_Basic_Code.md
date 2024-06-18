@@ -1,7 +1,3 @@
-### Note
-- Hiện tại chưa **module hóa** được code.
-- Mình chỉ đang gộp lại, và chạy thôi. Bước đầu thành công.
-
 ### Sample Code
 ```
 #[embassy_executor::task]
