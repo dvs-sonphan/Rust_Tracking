@@ -80,7 +80,7 @@ impl GPSData {
     }
 }
 
-// #[embassy_executor::task]
+// read_data_gps loop forever read data GPS
 pub async fn read_data_gps(
     mut gps_uart: Uart<'static, peripherals::USART2, peripherals::DMA1_CH7, peripherals::DMA1_CH6>,
     gps_data: GPSData,
@@ -150,7 +150,7 @@ pub async fn parse_data_gps(buf: Vec<&str>, mut gps_data: GPSData, sender: Sende
         }
 
         //show data gps
-        println!("Updated GPS Data: {:?}", gps_data);
+        // println!("Updated GPS Data: {:?}", gps_data);
 
         // Send updated data to the main thread
         sender.send(gps_data).await;
@@ -170,7 +170,7 @@ pub async fn main_task_gps(
     let _gps_pwr = Output::new(power_pin, Level::High, Speed::VeryHigh);
 
     //show data gps
-    println!("Updated GPS Data: {:?}", gps_data);
+    // println!("Updated GPS Data: {:?}", gps_data);
 
     //Read data GPS
     read_data_gps(gps_uart, gps_data, sender).await;

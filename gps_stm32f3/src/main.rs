@@ -3,8 +3,8 @@
 #![feature(type_alias_impl_trait)]
 #![feature(alloc_error_handler)]
 
-use core::fmt::Write;
-use heapless::String;
+// use core::fmt::Write;
+// use heapless::String;
 
 use defmt::*;
 use defmt_rtt as _;
@@ -30,6 +30,7 @@ use embassy_executor::Spawner;
 use embassy_stm32::usart::{Config, Uart};
 use embassy_stm32::{bind_interrupts, peripherals, usart};
 use embassy_time::{Duration, Timer};
+use embassy_stm32::wdg::IndependentWatchdog;
 
 //----------------------- Define Channel use embassy framwork ----------------
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
@@ -53,6 +54,10 @@ async fn main(spawner: Spawner) {
 
     info!("GPS Tracking");
     let p = embassy_stm32::init(Default::default());
+
+    //************ Define Watchdog-Timer******************** */
+    let mut wdt = IndependentWatchdog::new(p.IWDG, 20_000_000);
+    wdt.unleash();
 
     //************ Debug UART config ************************
     let mut config_debug = Config::default();
@@ -81,8 +86,8 @@ async fn main(spawner: Spawner) {
     let gps_data = GPSData::new();
 
     //******************* Tasks ***************************
+    task::debug_uart::show_data_debug(&mut usart_debug, "GPS Tracking\r\n").await;
     //GPS Task
-    task::debug_uart::show_data_debug(&mut usart_debug, "GPS Task\r\n").await;
     spawner
         .spawn(task::task_gps::main_task_gps(
             p.PA4,
@@ -121,6 +126,9 @@ async fn main(spawner: Spawner) {
 
         Timer::after(Duration::from_millis(1000)).await;
     }
+
+    // Reset WDT
+    wdt.pet();
 }
 
 // define what happens in an Out Of Memory (OOM) condition

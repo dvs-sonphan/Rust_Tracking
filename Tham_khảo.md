@@ -1,13 +1,15 @@
 ## Async Rust
-```
-https://tweedegolf.nl/en/blog/65/async-rust-vs-rtos-showdown
-https://dev.to/theembeddedrustacean/sharing-data-among-tasks-in-rust-embassy-synchronization-primitives-59hk
-https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
-https://www.linkedin.com/pulse/tokio-runtime-writing-reliable-asynchronous-withrust-soares-m-sc-/
-```
+- https://tweedegolf.nl/en/blog/65/async-rust-vs-rtos-showdown
+- https://dev.to/theembeddedrustacean/sharing-data-among-tasks-in-rust-embassy-synchronization-primitives-59hk
+- https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
+- https://www.linkedin.com/pulse/tokio-runtime-writing-reliable-asynchronous-withrust-soares-m-sc-/
 
 ### [embassy_executor](https://docs.embassy.dev/embassy-executor/git/cortex-m/index.html)
 > An async/await executor designed for embedded usage.
+
+### WDT embassy
+- https://github.com/embassy-rs/embassy/blob/main/examples/stm32f4/src/bin/wdt.rs
+- https://github.com/embassy-rs/embassy/blob/main/examples/stm32h7/src/bin/wdg.rs
 
 ----------------------------------------------------------------------------------
 ## Tham khảo một số code dùng thư viện Embassy
@@ -45,12 +47,17 @@ serde = { version = "1.0.126", default-features = false, features = ["derive"] }
 - https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/blinky_two_tasks.rs
 - https://github.com/embassy-rs/embassy/blob/main/examples/rp/src/bin/blinky_two_channels.rs
 - https://rust-classes.com/chapter_embedded_stmf401_soil
+- https://dhghomon.github.io/easy_rust/Chapter_50.html
 
+--------------------------------------------------------------------------------
+### Vector
+- https://fasterthanli.me/articles/a-half-hour-to-learn-rust#example-vec-t
+- https://dhghomon.github.io/easy_rust/Chapter_21.html
 
-
-
-
-
+--------------------------------------------------------------------------------
+### Method (Phương thức)
+- https://tourofrust.com/24_vi.html
+- https://fasterthanli.me/articles/a-half-hour-to-learn-rust#methods
 
 
 

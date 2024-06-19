@@ -1,6 +1,10 @@
 ## Rust_Tracking: 
 - Đây là project **GPS-Tracking** được viết bằng **Rust**.
-- Framwork được sử dụng là: [Embassy](https://embassy.dev/)
+- Framwork được sử dụng là: [Embassy](https://embassy.dev/). 
+- Tài liệu tham khảo:
+	- [Embedded Intro (Embassy)](https://rust-classes.com/chapter_embedded_intro)
+	- [Youtube](https://www.youtube.com/@tRichCS/search?query=embedded)	
+- https://www.youtube.com/watch?v=rAl-9HwD858&list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa&index=3
 
 ----------------------------------------------------------------------------------
 ### Kết nối phần cứng:

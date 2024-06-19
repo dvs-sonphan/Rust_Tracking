@@ -28,7 +28,7 @@ pub fn init_peripheral(p: Peripherals) -> Uart<'static, USART1, DMA1_CH4, DMA1_C
 }
 
 pub async fn show_data_debug(uart: &mut Uart<'static, USART1, DMA1_CH4, DMA1_CH5>, message: &str) {
-    info!("Debug Command");
+    // info!("Debug Command");
 
     uart.write(message.as_bytes()).await.unwrap();
     // uart.blocking_write(message.as_bytes()).unwrap();
