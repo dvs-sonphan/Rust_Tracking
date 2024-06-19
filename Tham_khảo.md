@@ -11,6 +11,9 @@
 - https://github.com/embassy-rs/embassy/blob/main/examples/stm32f4/src/bin/wdt.rs
 - https://github.com/embassy-rs/embassy/blob/main/examples/stm32h7/src/bin/wdg.rs
 
+### Others:
+- https://github.com/embassy-rs/embassy/blob/main/examples/stm32f4/src/bin/eth.rs
+
 ----------------------------------------------------------------------------------
 ## Tham khảo một số code dùng thư viện Embassy
 

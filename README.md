@@ -74,7 +74,7 @@ Step	| Status	|	Detail		|
 Step 1	| **DONE**	| Khởi tạo dự án và Test debug Serial UART_1 |
 Step 2	| **DONE**	| Đọc dữ liệu data GPS từ UART_2 |
 Step 3	| **DONE**	| Parse data GPS	|
-Step 4	| `Todo`	| Watchdog-Timer cho MCU |
+Step 4	| `Todo`	| Watchdog-Timer cho MCU - Feature Uptime Device  |
 Step 5	| `Todo`	| Kết nối với module sim |
 Step 6	| `Todo`	| Gửi data GPS lên IoT Platform |
 

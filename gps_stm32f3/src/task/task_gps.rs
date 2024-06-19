@@ -1,8 +1,12 @@
 use core::fmt::*;
 
+use alloc::format;
+use alloc::string::String;
+use defmt::Format;
+
+use alloc::vec::Vec;
 use defmt::*;
 use defmt_rtt as _;
-use alloc::vec::Vec;
 
 use nmea_parser::*;
 
@@ -14,8 +18,9 @@ use embassy_time::{Duration, Timer};
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::channel::Sender;
 
-// extern crate chrono;
-// use chrono::{DateTime, Utc};
+extern crate chrono;
+use chrono::{DateTime, TimeZone, Utc};
+// use chrono::{NaiveDate, NaiveDateTime};
 
 // #[derive(Debug)]
 // enum GPSUpdate {
@@ -28,7 +33,7 @@ use embassy_sync::channel::Sender;
 
 #[derive(Clone, Copy, Debug, Format)]
 pub struct GPSData {
-    // date_time:DateTime<Utc>,
+    date_time: DateTime<Utc>,
     lat: f64,
     long: f64,
     sat: u8,
@@ -38,6 +43,7 @@ pub struct GPSData {
 impl GPSData {
     pub fn new() -> Self {
         GPSData {
+            date_time: Utc.with_ymd_and_hms(1970, 1, 1, 0, 1, 1).unwrap(),
             lat: 0.0,
             long: 0.0,
             sat: 0,
@@ -62,6 +68,10 @@ impl GPSData {
         self.speed = new_speed;
     }
 
+    fn update_date_time(&mut self, new_datetime: DateTime<Utc>) {
+        self.date_time = new_datetime;
+    }
+
     // Get GPS Data
     pub fn get_lat(&self) -> f64 {
         self.lat
@@ -78,13 +88,28 @@ impl GPSData {
     pub fn get_speed(&self) -> f64 {
         self.speed
     }
+
+    pub fn get_date_time(&self) -> DateTime<Utc> {
+        self.date_time
+    }
+
+    pub fn format(&self) -> String {
+        format!(
+            "DateTime: {}, Latitude: {}, Longitude: {}, Satellites: {}, Speed: {}",
+            self.date_time.to_rfc3339(),
+            self.lat,
+            self.long,
+            self.sat,
+            self.speed
+        )
+    }
 }
 
 // read_data_gps loop forever read data GPS
 pub async fn read_data_gps(
     mut gps_uart: Uart<'static, peripherals::USART2, peripherals::DMA1_CH7, peripherals::DMA1_CH6>,
     gps_data: GPSData,
-    sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>
+    sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>,
 ) {
     info!("Read Data GPS");
     let mut msg: [u8; 256] = [0; 256];
@@ -111,7 +136,11 @@ pub async fn read_data_gps(
     }
 }
 
-pub async fn parse_data_gps(buf: Vec<&str>, mut gps_data: GPSData, sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>) {
+pub async fn parse_data_gps(
+    buf: Vec<&str>,
+    mut gps_data: GPSData,
+    sender: Sender<'static, ThreadModeRawMutex, GPSData, 64>,
+) {
     info!("Parse Data GPS");
 
     // Create parser and define sample sentences
@@ -121,10 +150,6 @@ pub async fn parse_data_gps(buf: Vec<&str>, mut gps_data: GPSData, sender: Sende
     for sentence in buf {
         match parser.parse_sentence(sentence) {
             core::prelude::v1::Ok(ParsedMessage::Gga(gga)) => {
-                // let gga_lat = GPSUpdate::Lat(gga.latitude.unwrap());
-                // let gga_long = GPSUpdate::Long(gga.longitude.unwrap());
-                // let gga_sate = GPSUpdate::Sat(gga.satellite_count.expect("Satellite Errors"));
-
                 // Updating GPS data
                 gps_data.update_lat(gga.latitude.unwrap());
                 gps_data.update_long(gga.longitude.unwrap());
@@ -134,14 +159,17 @@ pub async fn parse_data_gps(buf: Vec<&str>, mut gps_data: GPSData, sender: Sende
             }
 
             core::prelude::v1::Ok(ParsedMessage::Rmc(rmc)) => {
-                // let Some(date_time_data) = rmc.timestamp else {
-                //     todo!()
-                // };
-
                 // println!("Source:  {}", rmc.source);
                 // println!("Speed:   {} kts", rmc.sog_knots.unwrap());
                 // println!("Bearing: {}°", rmc.bearing.unwrap()); //Góc
 
+                let date_time_data = rmc.timestamp.expect("Error Time Date");
+                
+                let mut debug_datetime: String = String::new();
+                core::write!(&mut debug_datetime, "{}\r\n", date_time_data.to_rfc3339()).unwrap();
+                println!("{}", debug_datetime.as_str());
+
+                gps_data.update_date_time(date_time_data);
                 gps_data.update_speed(rmc.sog_knots.unwrap());
 
                 println!("");

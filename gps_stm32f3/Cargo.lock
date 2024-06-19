@@ -321,6 +321,7 @@ dependencies = [
  "bit_field",
  "bxcan",
  "cfg-if",
+ "chrono",
  "cortex-m",
  "cortex-m-rt",
  "critical-section",

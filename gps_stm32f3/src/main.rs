@@ -2,12 +2,12 @@
 #![no_main]
 #![feature(type_alias_impl_trait)]
 #![feature(alloc_error_handler)]
+#![feature(trivial_bounds)]
 
-// use core::fmt::Write;
-// use heapless::String;
-
+use core::fmt::Write;
 use defmt::*;
 use defmt_rtt as _;
+use heapless::String;
 use panic_probe as _;
 
 //------------------------- Define Macro Alloc ------------------------------------
@@ -25,12 +25,21 @@ const HEAP_SIZE: usize = 1024; // in bytes
 mod task;
 use crate::task::task_gps::GPSData;
 
+// #[derive(Format)]
+// impl Format for task::task_gps::GPSData {
+//     fn format(&self, fmt: defmt::Formatter) {
+//         let date_time_str = self.get_date_time().to_rfc3339();
+//         defmt::write!(fmt, "GPS Data [date_time: {}, lat: {}, long: {}, sat: {}, speed: {}]", 
+//                       date_time_str, self.get_lat(), self.get_long(), self.get_sat(), self.get_speed());
+//     }
+// }
+
 //----------------------- Define embassy framwork -----------------------------
 use embassy_executor::Spawner;
 use embassy_stm32::usart::{Config, Uart};
+use embassy_stm32::wdg::IndependentWatchdog;
 use embassy_stm32::{bind_interrupts, peripherals, usart};
 use embassy_time::{Duration, Timer};
-use embassy_stm32::wdg::IndependentWatchdog;
 
 //----------------------- Define Channel use embassy framwork ----------------
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
@@ -53,6 +62,7 @@ async fn main(spawner: Spawner) {
     unsafe { ALLOCATOR.init(cortex_m_rt::heap_start() as usize, HEAP_SIZE) }
 
     info!("GPS Tracking");
+    //************* Define Config for MCU******************* */
     let p = embassy_stm32::init(Default::default());
 
     //************ Define Watchdog-Timer******************** */
@@ -97,38 +107,34 @@ async fn main(spawner: Spawner) {
         ))
         .unwrap();
 
-    //************************************************* */
-    for _n in 0u32.. {
+    //******************** Loop Forever ***************************** */
+    for uptime in 0u32.. {
         // Receive updated GPS data from the task
         let gps_data = CHANNEL.receiver().receive().await;
 
         info!("GET Data");
+        // Use the custom format method to print the data
+        let mut debug_gps: String<128> = String::new();
+        core::write!(&mut debug_gps, "{}\r\n", gps_data.format()).unwrap();
+        // println!("{}", debug_gps.as_str());
+        // Output to debug serial
+        task::debug_uart::show_data_debug(&mut usart_debug, &debug_gps.as_str()).await;
+
+        // let datetime_data = gps_data.get_date_time();
+
         // Access data using getter methods
-        println!("Latitude: {}", gps_data.get_lat());
-        println!("Longitude: {}", gps_data.get_long());
-        println!("Satellites: {}", gps_data.get_sat());
-        println!("Speed: {}", gps_data.get_speed());
+        // println!("DateTime: {}", datetime_data);
+        // println!("Latitude: {}", gps_data.get_lat());
+        // println!("Longitude: {}", gps_data.get_long());
+        // println!("Satellites: {}", gps_data.get_sat());
+        // println!("Speed: {}", gps_data.get_speed());
 
-        //output to debug serial
-        // let mut gps_lat: String<64> = String::new();
-        // core::write!(&mut gps_lat, "Latitude: {}!\r\n", gps_data.get_lat().to_string()).unwrap();
-        // let mut gps_long: String<64> = String::new();
-        // core::write!(&mut gps_long, "Longitude: {}!\r\n", gps_data.get_lat().to_string()).unwrap();
-        // let mut gps_sat: String<8> = String::new();
-        // core::write!(&mut gps_sat, "Satellites: {}!\r\n", gps_data.get_lat().to_string()).unwrap();
-        // let mut gps_speed: String<64> = String::new();
-        // core::write!(&mut gps_speed, "Speed: {}!\r\n", gps_data.get_lat().to_string()).unwrap();
-
-        // task::debug_uart::show_data_debug(&mut usart_debug, &gps_lat.as_str()).await;
-        // task::debug_uart::show_data_debug(&mut usart_debug, &gps_long.as_str()).await;
-        // task::debug_uart::show_data_debug(&mut usart_debug, &gps_sat.as_str()).await;
-        // task::debug_uart::show_data_debug(&mut usart_debug, &gps_speed.as_str()).await;
-
+        debug!("Uptime: {}s", uptime);
         Timer::after(Duration::from_millis(1000)).await;
-    }
 
-    // Reset WDT
-    wdt.pet();
+        // Reset WDT
+        wdt.pet();
+    }
 }
 
 // define what happens in an Out Of Memory (OOM) condition
