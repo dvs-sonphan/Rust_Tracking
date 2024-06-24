@@ -1,0 +1,1 @@
+{"rustc":13532029962258702266,"features":"","target":0,"profile":0,"path":0,"deps":[[12132213976646008560,"build_script_build",false,12401467922704824964]],"local":[{"RerunIfChanged":{"output":"thumbv7em-none-eabihf\\debug\\build\\embedded-hal-async-6d57bafe593ad82c\\output","paths":["build.rs"]}}],"rustflags":[],"metadata":0,"config":0,"compile_kind":0}

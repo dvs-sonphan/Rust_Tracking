@@ -1,0 +1,9 @@
+H:\Hoc Tap\Rust_and_STM32\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\deps\libembedded_io_async-ada03af4eab11870.rmeta: C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\lib.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\mod.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\slice_mut.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\slice_ref.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\../README.md
+
+H:\Hoc Tap\Rust_and_STM32\Rust_Tracking\gps_stm32f3\target\thumbv7em-none-eabihf\debug\deps\embedded_io_async-ada03af4eab11870.d: C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\lib.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\mod.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\slice_mut.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\slice_ref.rs C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\../README.md
+
+C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\lib.rs:
+C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\mod.rs:
+C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\slice_mut.rs:
+C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\impls\slice_ref.rs:
+C:\Users\SonPhan\.cargo\registry\src\index.crates.io-6f17d22bba15001f\embedded-io-async-0.6.1\src\../README.md:
